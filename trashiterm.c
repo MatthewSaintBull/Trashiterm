@@ -63,10 +63,26 @@ void mv_file(char* username, char* filename, char* cwd_n_file){
 	rename(cwd_n_file,dirfile);	
 }
 
-int main(int argc, char *argv[]) {
-	char* filename = argv[1]; //file passed as argument
-	
+void check_arguments(char* arguments[]){
+	if(arguments[2]!=NULL){  //check if there are more than one argument passed during the execution
+		printf("you've passed a wrong number of arguments\n");
+		printf("usage : trashiterm file\n");
+		exit(0);
+	}
+}
 
+void exists(char* filename){
+	FILE *filecheck = fopen(filename, "rb");
+	if(filecheck == NULL){
+		printf("the file you are trying to remove doesn't exists\n");
+		exit(0);
+	} 
+}
+
+int main(int argc, char *argv[]) {
+	check_arguments(argv);
+	char* filename = argv[1]; //file passed as argument
+	exists(filename);
 	char* cwd_n_file;
 	char cwd[1024]; //chars array which'll contains the current working directory
 	getcwd(cwd, sizeof(cwd)); //get the current working directory
@@ -76,6 +92,4 @@ int main(int argc, char *argv[]) {
 	
 	gen_trashinfo(username,filename,cwd_n_file);
 	mv_file(username,filename,cwd_n_file);
-
-
 }
